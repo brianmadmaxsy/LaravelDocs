@@ -86,7 +86,21 @@ class PostResourceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if($request && $id)
+        {
+            $title = $request->get('title');
+            $content = $request->get('content');
+
+            $post = Post::where('id', $id)
+                    ->update(['title' => $title, 'content' => $content]);
+
+            if($post) {
+                return redirect('/posts');
+            }
+            else {
+                dd($post);
+            }        
+        }
     }
 
     /**
