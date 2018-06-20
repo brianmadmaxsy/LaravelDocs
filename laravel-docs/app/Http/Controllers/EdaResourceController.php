@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Database\Eloquent\Model;
-use App\Post;
+use App\Command;
 
-class PostResourceController extends Controller
+class EdaResourceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,10 +16,9 @@ class PostResourceController extends Controller
      */
     public function index()
     {
-        //$posts = Post::all(); //get all posts
-        $posts = Post::paginate(10); //paginate posts to group of n.
+        $commands = Command::paginate(10); //paginate posts to group of n.
 
-        return view('postcontent.displayposts', ['posts' => $posts]);
+        return view('EdaContent.displaycommands', ['commands' => $commands]);
     }
 
     /**
@@ -29,7 +28,7 @@ class PostResourceController extends Controller
      */
     public function create()
     {
-        return view('postcontent.createpost');
+        return view('EdaContent.addcommand');
     }
 
     /**
@@ -42,15 +41,18 @@ class PostResourceController extends Controller
     {
         if($request)
         {
-            $title = $request->get('title');
-            $content = $request->get('content');
+            $order = $request->get('command_order');
+            $response = $request->get('command_response');
+            $is_command = $request->get('is_command');
 
-            $post = new Post;
-            $post->title = $title;
-            $post->content = $content;
-            $post->save();
+            //dd($order, $response, $is_command);
+            $command = new Command;
+            $command->command_order = $order;
+            $command->command_response = $response;
+            $command->is_command = $is_command;
+            $command->save();
 
-            return redirect('/posts');
+            return redirect('/commands');
         }
     }
 
@@ -62,7 +64,7 @@ class PostResourceController extends Controller
      */
     public function show($id)
     {
-        echo "show: ".$id;
+        //
     }
 
     /**
@@ -73,9 +75,8 @@ class PostResourceController extends Controller
      */
     public function edit($id)
     {
-        //dd("Edit",$id);
-        $post = Post::where('id', $id)->first();
-        return view('postcontent.updatepost')->with('post',$post);
+        $command = Command::where('id', $id)->first();
+        return view('EdaContent.updatecommand')->with('command',$command);
     }
 
     /**
@@ -89,14 +90,15 @@ class PostResourceController extends Controller
     {
         if($request && $id)
         {
-            $title = $request->get('title');
-            $content = $request->get('content');
+            $order = $request->get('command_order');
+            $response = $request->get('command_response');
+            $is_command = $request->get('is_command');
 
-            $post = Post::where('id', $id)
-                    ->update(['title' => $title, 'content' => $content]);
+            $command = Command::where('id', $id)
+                    ->update(['command_order' => $order, 'command_response' => $response, 'is_command' => $is_command]);
 
-            if($post) {
-                return redirect('/posts');
+            if($command) {
+                return redirect('/commands');
             }
             else {
                 dd($post);
@@ -112,12 +114,12 @@ class PostResourceController extends Controller
      */
     public function destroy($id)
     {
-        dd($id);
+        //
     }
 
-    public function deletePost($id)
+    public function deleteCommand($id)
     {
-        Post::destroy($id);
-        return redirect('/posts');
+        Command::destroy($id);
+        return redirect('/commands');
     }
 }

@@ -18,6 +18,8 @@ Route::get('/', function () {
 //Route::get('/posts', 'PostController@index');
 Route::resource('posts', 'PostResourceController');
 Route::get('posts/{id}/delete', 'PostResourceController@deletePost');
+Route::resource('commands', 'EdaResourceController');
+Route::get('commands/{id}/delete', 'EdaResourceController@deleteCommand');
 /*
 //Available Router Methods
 //The router allows you to register routes that respond to any HTTP verb:
