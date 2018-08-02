@@ -1,5 +1,7 @@
 <?php
 
+use App\Jobs\InsertPersonQueueJob;
+use Carbon\Carbon;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,6 +22,10 @@ Route::resource('posts', 'PostResourceController');
 Route::get('posts/{id}/delete', 'PostResourceController@deletePost');
 Route::resource('commands', 'EdaResourceController');
 Route::get('commands/{id}/delete', 'EdaResourceController@deleteCommand');
+
+//SampleController routes
+Route::get('updatesyncstatus', 'SampleController@updatesyncstatus');
+Route::get('usehelper', 'SampleController@useHelper');
 /*
 //Available Router Methods
 //The router allows you to register routes that respond to any HTTP verb:
@@ -44,3 +50,15 @@ Route::any('foo', function () {
 //Redirect Routes
 Route::redirect('/here', '/there', 301);
 */
+
+//Practicing making queues
+Route::get('insertSampleModel2/{name}/{age}', function($name,$age){
+
+    //To run queue you have to go to terminal and run php artisan queue:work
+    //If you have changes on your code, after your changes run php artisan queue:restart
+
+    $job = (new InsertPersonQueueJob($name,$age)) //use App\Jobs\InsertPersonQueueJob;
+        ->delay(Carbon::now()->addSeconds(5)); //use Carbon\Carbon;
+
+    dispatch($job);
+});
